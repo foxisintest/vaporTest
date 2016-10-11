@@ -46,7 +46,7 @@ dbDrop.get("version") { (req:Request) -> ResponseRepresentable in
     return try Response(status: .ok, json: JSON(node: responseData));
 }
 
-dbDrop.get("/login"){req in
+dbDrop.get("/login",":login"){req in
     // login
     let userController = UserController();
     dbDrop.post("login", handler: userController.login);
@@ -54,7 +54,7 @@ dbDrop.get("/login"){req in
     
 }
 
-dbDrop.get("/register"){req in
+dbDrop.get("/register",":register"){req in
     // login
     let userController = UserController();
     dbDrop.post("register", handler: userController.register);
