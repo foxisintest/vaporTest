@@ -27,6 +27,8 @@ drop.get("/name",":name"){ req in
     return "error parameters"
 }
 
+drop.run()
+
 // /version?type='xxx'
 dbDrop.get("version") { (req:Request) -> ResponseRepresentable in
     
@@ -44,4 +46,11 @@ dbDrop.get("version") { (req:Request) -> ResponseRepresentable in
     return try Response(status: .ok, json: JSON(node: responseData));
 }
 
-drop.run()
+
+// login
+let userController = UserController();
+dbDrop.post("login", handler: userController.login);
+dbDrop.post("register", handler: userController.register);
+
+dbDrop.run()
+
