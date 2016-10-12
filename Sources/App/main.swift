@@ -2,9 +2,9 @@ import Vapor
 import HTTP
 import VaporMongo
 
-let dbDrop = Droplet(preparations: [User.self], providers: [VaporMongo.Provider.self]);
-
-
+//MARK:- 建数据库？User123
+//User.swift 里的try database.create("Users123") 是建表？
+let dbDrop = Droplet(preparations: [User123.self], providers: [VaporMongo.Provider.self]);
 
 // /version?type='xxx'
 dbDrop.get("version") { (req:Request) -> ResponseRepresentable in
@@ -23,19 +23,19 @@ dbDrop.get("version") { (req:Request) -> ResponseRepresentable in
     return try Response(status: .ok, json: JSON(node: responseData));
 }
 
-dbDrop.get("/bbb"){ req in
-    return "bbb"
+dbDrop.get("/login"){ req in
+    return "get login"
 }
 
-dbDrop.get("/login",":login"){req in
+dbDrop.post("login"){req in
     // login
     let userController = UserController();
     dbDrop.post("login", handler: userController.login);
-    return "login!"
+    return "post login!"
     
 }
 
-dbDrop.get("/register",":register"){req in
+dbDrop.get("register"){req in
     // login
     let userController = UserController();
     dbDrop.post("register", handler: userController.register);
@@ -43,13 +43,14 @@ dbDrop.get("/register",":register"){req in
 }
 
 let userController = UserController();
-dbDrop.post("login", handler: userController.login);
 dbDrop.post("register", handler: userController.register);
+dbDrop.post("login", handler: userController.login);
 
 dbDrop.run()
 
 
 //MARK:- 此Droplet不能运行在 dbDroplet前？？？？否则会出现 No preparations.
+//只能运行一个Droplet??
 let drop = Droplet()
 
 drop.get { req in

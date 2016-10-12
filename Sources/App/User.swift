@@ -9,7 +9,7 @@
 import Vapor
 import Fluent
 
-class User: Model {
+class User123: Model {
     
     var id:Node?
     var name:String?
@@ -49,10 +49,11 @@ class User: Model {
     
 }
 
-extension User: Preparation {
+extension User123: Preparation {
     static func prepare(_ database: Database) throws {
         
-        try database.create("Users") { users in
+        //建立表？
+        try database.create("Users123") { users in
             users.id()
             users.string("name")
             users.string("phone")
@@ -63,6 +64,6 @@ extension User: Preparation {
     }
     
     static func revert(_ database: Database) throws {
-        try database.delete("Users")
+        try database.delete("Users123")
     }
 }

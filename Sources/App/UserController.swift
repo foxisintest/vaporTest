@@ -28,7 +28,7 @@ final class UserController{
         
 //        AJLog().debug("api:/login \n \(account) -- \(password)");
         
-        let currentUser = try User.query().filter("phone", account!).first();
+        let currentUser = try User123.query().filter("phone", account!).first();
         if currentUser?.pw == password {
             
             // login success
@@ -61,7 +61,7 @@ final class UserController{
         
         // save
         let userId = UUID().uuidString;
-        var user = User(userId: userId, phone: phone!, pw: pw!);
+        var user = User123(userId: userId, phone: phone!, pw: pw!);
         user.name = name;
         user.gender = gender!;
         user.age = age!;
