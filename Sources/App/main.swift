@@ -1,83 +1,74 @@
 import Vapor
 import HTTP
-import VaporMongo
+import FluentMongo
 
-//MARK:- 建数据库？User123
-//User.swift 里的try database.create("Users123") 是建表？
-let dbDrop = Droplet(preparations: [User123.self], providers: [VaporMongo.Provider.self]);
-
-// /version?type='xxx'
-dbDrop.get("version") { (req:Request) -> ResponseRepresentable in
-    
-    let type = req.query?["type"]?.string;
-    
-    var version = "none";
-    if (type == "ios"){
-        version = "2.0";
-    }else if (type == "android"){
-        version = "2.5";
-    }
-    
-    let responseData = BaseResponse(code: 1001, msg: "success", data: ["version":version.makeNode()])
-    
-    return try Response(status: .ok, json: JSON(node: responseData));
-}
-
-dbDrop.get("/login"){ req in
-    return "get login"
-}
-
-dbDrop.post("login"){req in
-    // login
-    let userController = UserController();
-    dbDrop.post("login", handler: userController.login);
-    return "post login!"
-    
-}
-
-dbDrop.get("register"){req in
-    // login
-    let userController = UserController();
-    dbDrop.post("register", handler: userController.register);
-    return "register!"
-}
-
-let userController = UserController();
-dbDrop.post("register", handler: userController.register);
-dbDrop.post("login", handler: userController.login);
-
-dbDrop.run()
-
-
-//MARK:- 此Droplet不能运行在 dbDroplet前？？？？否则会出现 No preparations.
-//只能运行一个Droplet??
+//demo code
+/*
 let drop = Droplet()
 
 drop.get { req in
-    let lang = req.headers["Accept-Language"]?.string ?? "en"
     return try drop.view.make("welcome", [
-    	"message": Node.string(drop.localization[lang, "welcome", "title"])
+    	"message": drop.localization[req.lang, "welcome", "title"]
     ])
 }
 
-
 drop.resource("posts", PostController())
 
-drop.get("/"){
-    request in
-    return "hello world"
-}
+drop.run()
+*/
 
-drop.get("/name",":name"){ req in
-    if let name = req.parameters["name"]?.string{
-        return "hello \(name)!"
+//参考 https://segmentfault.com/a/1190000008421393?utm_source=tuicool&utm_medium=referral
+final class UserMongoDB: Model {
+    var exists: Bool = false
+    
+    var id: Node?
+    var name: String
+    
+    init(name: String) {
+        self.name = name
     }
-    return "error parameters"
+    
+    init(node: Node, in context: Context) throws {
+        id = try node.extract("id")
+        name = try node.extract("name")
+    }
+    
+    func makeNode(context: Context) throws -> Node {
+        return try Node(node: [
+            "id": id,
+            "name": name
+            ])
+    }
+    
+    static func prepare(_ database: Database) throws {
+        try database.create("users") { users in
+            users.id()
+            users.string("name")
+        }
+    }
+    
+    static func revert(_ database: Database) throws {
+        try database.delete("users")
+    }
 }
 
-drop.get("/lll"){ req in
-    return "lll"
+let mongo = try MongoDriver(database: "fox-db", user: "fox", password: "fox", host: "ds023052.mlab.com", port: 23052)
+let db = Database(mongo)
+let drop = Droplet()
+drop.database = db
+drop.preparations.append(UserMongoDB.self)
+
+drop.post("login"){ requset in
+    var abc = UserMongoDB(name: "abcdefg")
+    try abc.save()
+    return abc
 }
 
+drop.get("login"){_ in
+    var abc = UserMongoDB(name: "abcdefg")
+    try abc.save()
+    return abc
+}
 
 drop.run()
+
