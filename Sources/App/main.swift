@@ -4,18 +4,18 @@ import FluentMongo
 
 //demo code
 /*
-let drop = Droplet()
-
-drop.get { req in
-    return try drop.view.make("welcome", [
-    	"message": drop.localization[req.lang, "welcome", "title"]
-    ])
-}
-
-drop.resource("posts", PostController())
-
-drop.run()
-*/
+ let drop = Droplet()
+ 
+ drop.get { req in
+ return try drop.view.make("welcome", [
+ "message": drop.localization[req.lang, "welcome", "title"]
+ ])
+ }
+ 
+ drop.resource("posts", PostController())
+ 
+ drop.run()
+ */
 
 //参考 https://segmentfault.com/a/1190000008421393?utm_source=tuicool&utm_medium=referral
 final class UserMongoDB: Model {
@@ -58,16 +58,20 @@ let drop = Droplet()
 drop.database = db
 drop.preparations.append(UserMongoDB.self)
 
-drop.post("login"){ requset in
-    var abc = UserMongoDB(name: "abcdefg")
+drop.post("login"){ req in
+    guard let name = req.data["name"]?.string else{
+        throw Abort.badRequest
+    }
+    var abc = UserMongoDB(name: name)
     try abc.save()
     return abc
 }
 
-drop.get("login"){_ in
+drop.get("login"){req in
     var abc = UserMongoDB(name: "abcdefg")
     try abc.save()
-    return abc
+    //    return try JSON(["memo":"mongoDB result id:\(abc.id!), name:\(abc.name)])
+    return try JSON(["memo":"另可用postman测试post方法, Headers空，Body参数为name=xx"])
 }
 
 drop.run()
