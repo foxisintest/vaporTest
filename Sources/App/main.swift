@@ -68,10 +68,28 @@ drop.post("login"){ req in
 }
 
 drop.get("login"){req in
-    var abc = UserMongoDB(name: "abcdefg")
-    try abc.save()
+    // var abc = UserMongoDB(name: "abcdefg")
+    // try abc.save()
     //    return try JSON(["memo":"mongoDB result id:\(abc.id!), name:\(abc.name)])
     return try JSON(["memo":"另可用postman测试post方法, Headers空，Body参数为name=xx"])
+}
+
+drop.get("index"){
+    var content = "
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Page Title</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+    
+</body>
+</html>
+    "
+    return content
 }
 
 drop.run()
