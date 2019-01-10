@@ -71,11 +71,15 @@ drop.get("login"){req in
     // var abc = UserMongoDB(name: "abcdefg")
     // try abc.save()
     //    return try JSON(["memo":"mongoDB result id:\(abc.id!), name:\(abc.name)])
-    return try JSON(["memo":"另可用postman测试post方法, Headers空，Body参数为name=xx"])
+    return try JSON(["memo":"另可用postman测试post方法, Headers空，Body参数为name=xx!!!!!!!!!!!"])
 }
 
 drop.get("index"){
     return try drop.view.make("welcome", ["message": "hello vapor"])
+}
+
+drop.get("index2"){
+    return try drop.view.make("welcome", ["message": "hello vapor index2"])
 }
 
 drop.run()
