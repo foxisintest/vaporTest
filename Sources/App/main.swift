@@ -74,11 +74,11 @@ drop.get("login"){req in
     return try JSON(["memo":"另可用postman测试post方法, Headers空，Body参数为name=xx!!!!!!!!!!!!!!"])
 }
 
-drop.get("index"){
+drop.get("index"){ req in
     return try drop.view.make("welcome", ["message": "hello vapor1"])
 }
 
-drop.get("index2"){
+drop.get("index2"){ req in
     return try drop.view.make("welcome", ["message": "hello vapor index2"])
 }
 
