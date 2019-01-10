@@ -82,5 +82,9 @@ drop.get("index2"){ req in
     return try drop.view.make("welcome", ["message": "hello vapor index2"])
 }
 
+drop.get("crud"){ req in
+    return try drop.view.make("crud", ["message": "hello vapor index2"])
+}
+
 drop.run()
 
